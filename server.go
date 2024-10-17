@@ -6,25 +6,10 @@ import (
 	"algocrux/config"
 	"algocrux/controllers"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
-
-func corsMiddleware() gin.HandlerFunc {
-    return func(c *gin.Context) {
-        c.Writer.Header().Set("Access-Control-Allow-Origin", "https://algocruxx.vercel.app")
-        c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-        c.Writer.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-        c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
-        
-        if c.Request.Method == "OPTIONS" {
-            c.AbortWithStatus(204)
-            return
-        }
-
-        c.Next()
-    }
-}
 
 func main() {
 	_ = godotenv.Load()
@@ -32,8 +17,14 @@ func main() {
 	config.ConnectDatabase()
 
 	server := gin.Default()
-	
-	server.Use(corsMiddleware())
+
+	server.Use(cors.New(cors.Config{
+		AllowOrigins: []string{"http://localhost:3000","https://algocruxx.vercel.app"},
+		AllowMethods: []string{"GET", "POST", "PUT", "DELETE"},
+		AllowHeaders: []string{"Content-Type", "Authorization"},
+		ExposeHeaders: []string{"Content-Length"},
+		AllowCredentials: true,
+	}))
 
 	server.GET("/", func(c *gin.Context) {
 		c.JSON(200, gin.H{
