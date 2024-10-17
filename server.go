@@ -19,15 +19,13 @@ func main() {
 	server := gin.Default()
 
 	server.Use(cors.New(cors.Config{
-		AllowOrigins: []string{"http://localhost:3000", "https://algocruxx.vercel.app"},
-		AllowOriginFunc: func(origin string) bool {
-			return origin == "http://localhost:3000" || origin == "https://algocruxx.vercel.app"
-		},
+		AllowOrigins:     []string{"*"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Content-Type", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length"},
-		AllowCredentials: true,
-	}))	
+		AllowCredentials: false,
+	}))
+	
 
 	server.GET("/", func(c *gin.Context) {
 		c.JSON(200, gin.H{
