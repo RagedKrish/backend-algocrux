@@ -14,7 +14,7 @@ type JWTClaims struct {
     jwt.RegisteredClaims
 }
 
-func GenerateJWT( githubUsername, id string) (string, error) {
+func GenerateJWT(githubUsername, id string) (string, error) {
     _ = godotenv.Load()
     secret := os.Getenv("JWT_SECRET")
 
@@ -35,4 +35,16 @@ func GenerateJWT( githubUsername, id string) (string, error) {
     }
 
     return signedToken, nil
+}
+
+func ValidateJWT(tokenString string) (*jwt.Token, *JWTClaims, error) {
+    _ = godotenv.Load()
+    secret := os.Getenv("JWT_SECRET")
+
+    claims := &JWTClaims{}
+    token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+        return []byte(secret), nil
+    })
+
+    return token, claims, err
 }

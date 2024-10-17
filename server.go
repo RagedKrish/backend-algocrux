@@ -34,7 +34,7 @@ func main() {
 
 	server.POST("/api/user/signup", controllers.Signup)
 	server.POST("/api/user/login", controllers.Login)
-	server.GET("/api/user/get-user/:username", controllers.GetUser)
+	server.GET("/api/user/get-user", controllers.GetUser)
 	server.GET("/api/user/developers", controllers.GetUsers)
 
 	port := os.Getenv("PORT")
